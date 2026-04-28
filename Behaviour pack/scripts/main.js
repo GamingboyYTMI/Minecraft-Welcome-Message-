@@ -37,15 +37,6 @@ world.afterEvents.playerJoin.subscribe((event) => {
 //  FIREWORKS ON BLOCK BREAK
 // ─────────────────────────────────────────
 
-// Particle effects available in Bedrock with no extra packs
-const particleEffects = [
-  "minecraft:large_explosion",
-  "minecraft:huge_explosion_emitter",
-  "minecraft:explosion_particle",
-  "minecraft:villager_happy",
-  "minecraft:totem_particle",
-];
-
 // Firework sounds to cycle through
 const fireworkSounds = [
   "firework.launch",
@@ -67,15 +58,8 @@ function spawnFirework(dimension, location) {
       { x, y, z }
     );
 
-    // Pick random particles and sounds
-    const particle = particleEffects[Math.floor(Math.random() * particleEffects.length)];
-    const sound    = fireworkSounds[Math.floor(Math.random() * fireworkSounds.length)];
-
-    // Burst of particles at the location
-    dimension.runCommand(`particle ${particle} ${x} ${y} ${z}`);
-
-    // Extra sparkle layer
-    dimension.runCommand(`particle minecraft:explosion_particle ${x} ${y + 0.5} ${z}`);
+    // Pick a random sound
+    const sound = fireworkSounds[Math.floor(Math.random() * fireworkSounds.length)];
 
     // Play firework sounds
     dimension.runCommand(`playsound firework.launch @a ${x} ${y} ${z} 1 1`);
@@ -87,9 +71,8 @@ function spawnFirework(dimension, location) {
     }, 5);
 
   } catch (err) {
-    // Fallback — pure command approach if entity spawn fails
+    // Fallback — command-only sound approach if entity spawn fails
     try {
-      dimension.runCommand(`particle minecraft:large_explosion ${x} ${y} ${z}`);
       dimension.runCommand(`playsound firework.launch @a ${x} ${y} ${z} 1 1`);
       dimension.runCommand(`playsound firework.blast @a ${x} ${y} ${z} 1 1`);
     } catch (_) {}
